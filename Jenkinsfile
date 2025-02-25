@@ -1,20 +1,23 @@
 pipeline{
-  agent{label 'Slave1'}
+  agent none
     stages{
-      stage('Build'){
-        steps{
-          sh 'sleep 5;echo "This is build stage"'
+      stage('Distributed build'){
+        parallel{
+          stage('Build on master'){
+            agent{label 'master'}
+              steps{
+          sh 'sleep 5;echo "This is build stage1"'
                     }
               }
-      stage('Test'){
+      stage('Build on slave'){
+        agent{label 'Slave1'}
         steps{
-         sh 'sleep 15; echo "This is test stage"'
+         sh 'sleep 15; echo "This is build stage2"'
                    }
              }
-      stage('Deploy'){
-        steps{
-          sh 'sleep 20;echo "This is deploy stage"'
-                     }
-              }
-           }
-         }    
+        }
+      }
+    }
+}
+    
+       
